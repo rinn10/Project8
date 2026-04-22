@@ -2,18 +2,44 @@ package edu.ttap.graphs;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
+import java.util.Map;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A generic, weighted, undirected graph where nodes are represented by strings.
  */
 public class Graph {
 
+    private Map<String, List<String>> graph;
+    private Map<String, Map<String, Integer>> weights;
     /**
      * Constructs a graph from a list of graph entries.
      * @param entries the entries of the graph; each entry is one edge
      */
     public Graph(List<GraphEntry> entries) {
-        // TODO: implement me!
+        graph= new HashMap<>();
+        weights= new HashMap<>();
+
+        for(int i=0; i<entries.size(); i++)
+        {
+            GraphEntry entry = entries.get(i);
+            String src = entry.src();
+            String dest = entry.dest();
+            int weight = entry.weight();
+
+            if (!graph.containsKey(src)) 
+                graph.put(src, new ArrayList<>());
+    
+            if (!graph.containsKey(dest)) 
+                graph.put(dest, new ArrayList<>());
+
+            
+    
+        }
+
     }
 
     /**
@@ -22,8 +48,7 @@ public class Graph {
      * otherwise
      */
     public boolean contains(String n) {
-        // TODO: implement me!
-        return false;
+        return graph.containsKey(n);
     }
 
     /**
@@ -43,7 +68,24 @@ public class Graph {
      * beginning at the starting node.
      */
     public List<String> collectDepthFirst(String start) {
-        // TODO: implement me!
+        Stack<String> stackNode = new Stack<>();
+        Set<String> visitedNode = new Set<>();
+        List<String> answer = new ArrayList<>();
+        stackNode.push(start);
+        while(stackNode!=null) {
+            String checkNode = stackNode.pop();
+            boolean visited = false;
+            for(int i=0; i<visitedNode.length(); i++) {
+            if(checkNode==visitedNode<i>) {
+                visited = true;
+                }
+            }
+            if(visited == false) {
+                answer.add(checkNode);
+                visitedNode.add(checkNode);
+            }
+            stackNode.push(Graph(checkNode));
+        }
         return null;
     }
 
