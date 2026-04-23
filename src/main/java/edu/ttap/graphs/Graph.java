@@ -40,8 +40,19 @@ public class Graph {
             if (!graph.containsKey(dest))
                 graph.put(dest, new ArrayList<>());
 
-        }
+            graph.get(src).add(dest);
+            graph.get(dest).add(src);
 
+            if (!weights.containsKey(src)) 
+                weights.put(src, new HashMap<>());
+    
+            if (!weights.containsKey(dest)) 
+                weights.put(dest, new HashMap<>());
+    
+
+            weights.get(src).put(dest, weight);
+            weights.get(dest).put(src, weight);
+        }
     }
 
     /**
@@ -60,7 +71,9 @@ public class Graph {
      *         otherwise
      */
     public Optional<Integer> getWeight(String src, String dst) {
-        // TODO: implement me!
+        if (weights.containsKey(src) && weights.get(src).containsKey(dst)) {
+            return Optional.of(weights.get(src).get(dst));
+        }
         return Optional.empty();
     }
 
