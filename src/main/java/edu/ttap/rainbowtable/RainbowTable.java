@@ -1,5 +1,5 @@
 package edu.ttap.rainbowtable;
-
+import java.util.Map;
 import java.util.function.Function;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,9 @@ import java.util.Optional;
  * reversing hashes.
  */
 public class RainbowTable {
+    private Function<Password, Hash> hasher;
+    private Function<Hash, Password> reducer;
+    private Map<Password, Password> passwordMap;
 
     /**
      * Constructs a new rainbow table from an already-computed list of endpoints.
@@ -24,15 +27,14 @@ public class RainbowTable {
         this.hasher= hasher;
         this.reducer= reducer;
 
-        
-        Hashmap<> passwordMap= new HashMap<>();
+        Map<Password, Password> passwordMap = new HashMap<>();
 
         for(int i=0; i<chains.size(); i++)
         {
             Pair<Password, Password> chain= chains.get(i);
-
-            
-
+            Password start = chain.first();
+            Password end = chain.second();
+            passwordMap.put(end, start);
         }
     }
 
@@ -45,14 +47,29 @@ public class RainbowTable {
      */
     public Optional<Password> invert(Hash h, int maxSteps) {
         String ans = "";
-        for(int i=0; i<maxSteps; i++) {
-            if(i%2 == 0) {
-                ans = 
-            } else {
+        Hash currentHash = h;
+
+         for (int i = 0; i < maxSteps; i++) {
+            if (i % 2 == 0) {
+                Password possibleEnd = reducer.apply(currentHash);
+                ans = possibleEnd.value();
+            
+                    if (passwordMap.containsKey(possibleEnd)) {
+                        Password start = passwordMap.get(possibleEnd);
+                        Password currentPassword = start;
+
+                        for (int j = 0; j < maxSteps; j++) {
+                            Hash newHash = hasher.apply(currentPassword);
+                            if (newHash.equals(h)) 
+                                return Optional.of(currentPassword);
+                            currentPassword = reducer.apply(newHash);
+                            }
+                        }
+                currentHash = hasher.apply(possibleEnd);
+                } 
+            else 
                 h.hashCode();
             }
-        }
-        return Optional.empty();
-    }
-    // data strucutres of a Pair reduce. Endpoint hashSet.endpoint? 
+    return Optional.empty();
+}
 }

@@ -7,11 +7,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import edu.ttap.rainbowtable.Hash;
-import edu.ttap.rainbowtable.Pair;
-import edu.ttap.rainbowtable.Password;
-import edu.ttap.rainbowtable.RainbowTable;
-
 /**
  * Tests for the RainbowTable class.
  */

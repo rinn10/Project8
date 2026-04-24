@@ -40,8 +40,19 @@ public class Graph {
             if (!graph.containsKey(dest))
                 graph.put(dest, new ArrayList<>());
 
-        }
+            graph.get(src).add(dest);
+            graph.get(dest).add(src);
 
+            if (!weights.containsKey(src)) 
+                weights.put(src, new HashMap<>());
+    
+            if (!weights.containsKey(dest)) 
+                weights.put(dest, new HashMap<>());
+    
+
+            weights.get(src).put(dest, weight);
+            weights.get(dest).put(src, weight);
+        }
     }
 
     /**
@@ -60,9 +71,12 @@ public class Graph {
      *         otherwise
      */
     public Optional<Integer> getWeight(String src, String dst) {
-        // TODO: implement me!
+        if (weights.containsKey(src) && weights.get(src).containsKey(dst)) {
+            return Optional.of(weights.get(src).get(dst));
+        }
         return Optional.empty();
     }
+
 
     /**
      * @param start the node to begin the search, assumed to be in the graph
@@ -119,25 +133,28 @@ public class Graph {
     public List<Edge> deriveMST(String start) {
         Set<String> visitedV = new HashSet<>();
         List<Edge> visitedE = new ArrayList<>();
-        Map<String, String> vertexEdge = new HashMap<>();
+        Map<String, Edge> vertexEdge = new HashMap<>();
         visitedV.add(start);
-        while(XX) {
-            String checkV = get.visitedV();
-            int minE = 0;
-            getWeight(checkV, adj);
+        for(Edge edge: adj.get(start)) {
+            String neighborV = edge.adj(start);
+            vertexEdge.put(neighborV, edge);
+        }
+        while(!vertexEdge.isEmpty()) {
+            Edge minEdge 
+            String checkV = visitedV.get();
+            while(visitedE.length()==0)
         }
         return null;
     }
 }
 
 /*
-A mapping from each vertex v in the graph to the minimum weight edge from 
-the vertices visited so far to v. Initially, there are no such mappings in the graph.
-
 Beginning with the start vertex:
 Add the start vertex to the visited collection.
 Update the vertex-edge mapping with the start vertex:
-For each vertex incident to the start vertex, add a binding from that vertex to the edge connecting it and the start vertex to the map.
+For each vertex incident to the start vertex, add a binding from that vertex to the edge 
+connecting it and the start vertex to the map.
+
 While there is a vertex that does not appear in the visited collection:
 Choose an unvisited vertex v in the mapping whose corresponding edge has minimum weight among all the unvisited vertices. Add that edge to the visited edge collection.
 Add v to the visited collection.
