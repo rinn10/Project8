@@ -1,6 +1,6 @@
 # (_TODO: fill in the title of this assignment here!_)
 
-Authors: (_TODO: fill in your names here!_)
+Authors: Brisha Jain & Risa Takemoto
 
 ## Build commands
 

@@ -43,12 +43,11 @@ public class Graph {
             graph.get(src).add(dest);
             graph.get(dest).add(src);
 
-            if (!weights.containsKey(src)) 
+            if (!weights.containsKey(src))
                 weights.put(src, new HashMap<>());
-    
-            if (!weights.containsKey(dest)) 
+
+            if (!weights.containsKey(dest))
                 weights.put(dest, new HashMap<>());
-    
 
             weights.get(src).put(dest, weight);
             weights.get(dest).put(src, weight);
@@ -76,7 +75,6 @@ public class Graph {
         }
         return Optional.empty();
     }
-
 
     /**
      * @param start the node to begin the search, assumed to be in the graph
@@ -135,28 +133,60 @@ public class Graph {
         List<Edge> visitedE = new ArrayList<>();
         Map<String, Edge> vertexEdge = new HashMap<>();
         visitedV.add(start);
-        for(Edge edge: adj.get(start)) {
-            String neighborV = edge.adj(start);
-            vertexEdge.put(neighborV, edge);
+        for (String neighbor : graph.get(start)) {
+            int weight = getWeight(start, neighbor).get();
+            vertexEdge.put(neighbor, new Edge(start, neighbor));
         }
-        while(!vertexEdge.isEmpty()) {
-            Edge minEdge 
-            String checkV = visitedV.get();
-            while(visitedE.length()==0)
+
+        while (visitedV.size() != graph.size()) {
+            int minWeight = Integer.MAX_VALUE;
+            String minVert = null;
+            for (String vert : vertexEdge.keySet()) {
+                if (!visitedV.contains(vert)) {
+                    int weight = getWeight(vertexEdge.get(vert).src(), vert).get();
+                    if (weight < minWeight) {
+                        minWeight = weight;
+                        minVert = vert;
+                    }
+                }
+            }
+            visitedE.add(vertexEdge.get(minVert));
+            visitedV.add(minVert);
+
+            for (String neighbor : graph.get(minVert)) {
+                if (!visitedV.contains(neighbor)) {
+                    if (!vertexEdge.containsKey(neighbor)) {
+                        vertexEdge.put(neighbor, new Edge(minVert, neighbor));
+                    } else {
+                        int oldWeight = getWeight(vertexEdge.get(neighbor).src(), neighbor).get();
+                        int newWeight = getWeight(minVert, neighbor).get();
+                        if (newWeight < oldWeight) {
+                            vertexEdge.put(neighbor, new Edge(minVert, neighbor));
+                        }
+                    }
+                }
+            }
         }
-        return null;
+        return visitedE;
     }
 }
-
 /*
-Beginning with the start vertex:
-Add the start vertex to the visited collection.
-Update the vertex-edge mapping with the start vertex:
-For each vertex incident to the start vertex, add a binding from that vertex to the edge 
-connecting it and the start vertex to the map.
-
-While there is a vertex that does not appear in the visited collection:
-Choose an unvisited vertex v in the mapping whose corresponding edge has minimum weight among all the unvisited vertices. Add that edge to the visited edge collection.
-Add v to the visited collection.
-Update the vertex-edge mapping with v:
-For each vertex u incident to v, add/update the binding with the edge (u,v) if it does not exist yet or is smaller than the current edge for u. */
+ * Part 5: Applying Graph Algorithms
+ * 
+ * DFS:
+ * Question: Starting from one node, what nodes can I reach if I keep
+ * going as deep as possible?
+ * Answer: DFS would visit nodes by going along one path fully before
+ * backtracking and exploring
+ * other paths.
+ * 
+ * BFS:
+ * Question: Starting from one node, what nodes are closest to it?
+ * Answer: BFS would visit nodes level by level, so it shows which nodes
+ * are 1 step away, then 2 steps away, and so on.
+ * 
+ * Prim's Algorithm:
+ * Question: What is the cheapest way to connect all nodes in the graph?
+ * Answer: Prim’s algorithm would return a set of edges that connects all
+ * nodes with the smallest total weight.
+ */
