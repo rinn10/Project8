@@ -24,10 +24,9 @@ public class RainbowTable {
             List<Pair<Password, Password>> chains,
             Function<Password, Hash> hasher,
             Function<Hash, Password> reducer) {
+        this.passwordMap = new HashMap<>();
         this.hasher= hasher;
         this.reducer= reducer;
-
-        Map<Password, Password> passwordMap = new HashMap<>();
 
         for(int i=0; i<chains.size(); i++)
         {
