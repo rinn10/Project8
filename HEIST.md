@@ -2,7 +2,7 @@
 
 ## Breaking In
 
-The hidden note in `example-dataset.data` redirected me to the “Breaking In” activity.
+The hidden note in `example-dataset.data` redirected us to the “Breaking In” activity.
 The activity explains that the MathLAN network changes between five graph configurations:
 - mathlan.A.data
 - mathlan.B.data
