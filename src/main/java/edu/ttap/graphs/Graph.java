@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class Graph {
 
     private Map<String, List<String>> graph;
+
     private Map<String, Map<String, Integer>> weights;
 
     /**
@@ -34,20 +35,24 @@ public class Graph {
             String dest = entry.dest();
             int weight = entry.weight();
 
-            if (!graph.containsKey(src))
+            if (!graph.containsKey(src)) {
                 graph.put(src, new ArrayList<>());
+            }
 
-            if (!graph.containsKey(dest))
+            if (!graph.containsKey(dest)) {
                 graph.put(dest, new ArrayList<>());
+            }
 
             graph.get(src).add(dest);
             graph.get(dest).add(src);
 
-            if (!weights.containsKey(src))
+            if (!weights.containsKey(src)) {
                 weights.put(src, new HashMap<>());
+            }
 
-            if (!weights.containsKey(dest))
+            if (!weights.containsKey(dest)) {
                 weights.put(dest, new HashMap<>());
+            }
 
             weights.get(src).put(dest, weight);
             weights.get(dest).put(src, weight);
@@ -168,6 +173,13 @@ public class Graph {
             }
         }
         return visitedE;
+    }
+
+    /**
+    * @return all nodes in the graph
+    */
+    public Set<String> getNodes() {
+        return graph.keySet();
     }
 }
 

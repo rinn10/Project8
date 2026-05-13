@@ -1,4 +1,5 @@
 package edu.ttap.rainbowtable;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.HashMap;
@@ -10,8 +11,11 @@ import java.util.Optional;
  * reversing hashes.
  */
 public class RainbowTable {
+
     private Function<Password, Hash> hasher;
+
     private Function<Hash, Password> reducer;
+
     private Map<Password, Password> passwordMap;
 
     /**
@@ -25,12 +29,11 @@ public class RainbowTable {
             Function<Password, Hash> hasher,
             Function<Hash, Password> reducer) {
         this.passwordMap = new HashMap<>();
-        this.hasher= hasher;
-        this.reducer= reducer;
+        this.hasher = hasher;
+        this.reducer = reducer;
 
-        for(int i=0; i<chains.size(); i++)
-        {
-            Pair<Password, Password> chain= chains.get(i);
+        for (int i = 0; i < chains.size(); i++) {
+            Pair<Password, Password> chain = chains.get(i);
             Password start = chain.first();
             Password end = chain.second();
             passwordMap.put(end, start);
@@ -39,7 +42,7 @@ public class RainbowTable {
 
     /**
      * Attempts to reverse the given hash according to the rainbow table algorithm.
-     * 
+     *
      * @param h the hash to invert
      * @param maxSteps the maximum number of steps (hash-reduce cycles) to attempt
      * @return an Optional containing the password if found, or empty if not
@@ -48,27 +51,28 @@ public class RainbowTable {
         String ans = "";
         Hash currentHash = h;
 
-         for (int i = 0; i < maxSteps; i++) {
+        for (int i = 0; i < maxSteps; i++) {
             if (i % 2 == 0) {
                 Password possibleEnd = reducer.apply(currentHash);
                 ans = possibleEnd.value();
-            
-                    if (passwordMap.containsKey(possibleEnd)) {
-                        Password start = passwordMap.get(possibleEnd);
-                        Password currentPassword = start;
 
-                        for (int j = 0; j < maxSteps; j++) {
-                            Hash newHash = hasher.apply(currentPassword);
-                            if (newHash.equals(h)) 
-                                return Optional.of(currentPassword);
-                            currentPassword = reducer.apply(newHash);
-                            }
+                if (passwordMap.containsKey(possibleEnd)) {
+                    Password start = passwordMap.get(possibleEnd);
+                    Password currentPassword = start;
+
+                    for (int j = 0; j < maxSteps; j++) {
+                        Hash newHash = hasher.apply(currentPassword);
+                        if (newHash.equals(h)) {
+                            return Optional.of(currentPassword);
                         }
+                        currentPassword = reducer.apply(newHash);
+                    }
+                }
                 currentHash = hasher.apply(possibleEnd);
-                } 
-            else 
+            } else {
                 h.hashCode();
             }
-    return Optional.empty();
-}
+        }
+        return Optional.empty();
+    }
 }
